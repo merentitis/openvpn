@@ -1882,12 +1882,10 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt, unsigned int flag
     }
 #endif
 
-    if (!tt->did_ifconfig_ipv6_setup)
+    if ((tt->type == DEV_TYPE_TAP) && !tt->did_ifconfig_ipv6_setup)
     {
-        msg( M_INFO, "add_route_ipv6(): not adding %s/%d: "
-             "no IPv6 address been configured on interface %s",
-             network, r6->netbits, device);
-        return;
+      msg(M_WARN, "WARNING: OpenVPN was configured to add a route towards %s/%d via %s over %s. However, no IPv6 has been configured for this interface, therefore the route installation may fail.",
+      network, r6->netbits, gateway, device);
     }
 
     msg( M_INFO, "add_route_ipv6(%s/%d -> %s metric %d) dev %s",
